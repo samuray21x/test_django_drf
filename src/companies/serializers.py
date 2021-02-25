@@ -16,6 +16,7 @@ class CompanySerializer(DynamicFieldsModelSerializer, serializers.ModelSerialize
 
 def companies_inline_serializer(companies):
     return [{
+        'id': company.id,
         'name': company.name,
         'uuid': company.uuid,
         'boolean_1': company.boolean_1,
