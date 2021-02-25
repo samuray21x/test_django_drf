@@ -17,16 +17,15 @@ ROOT_URLCONF = 'core.urls'
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
 
     # 'debug_toolbar',
 
     # project apps
+    'companies',
+    'entities',
 ]
 
 MIDDLEWARE = [
@@ -37,7 +36,7 @@ MIDDLEWARE = [
 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -52,6 +51,7 @@ DATABASES = {
         'PASSWORD': env.str('DB_PASSWORD'),
         'HOST': env.str('DB_HOST', 'localhost'),
         'PORT': env.str('DB_PORT', '5432'),
+        'CONN_MAX_AGE': 10,
     }
 }
 
@@ -103,6 +103,11 @@ if LOGS_ENABLED:
                 'style': '{',
             },
         },
+        'filters': {
+            'require_debug_true': {
+                '()': 'django.utils.log.RequireDebugTrue',
+            }
+        },
         'handlers': {
             'debug_file': {
                 'level': 'DEBUG',
@@ -120,6 +125,11 @@ if LOGS_ENABLED:
                 'backupCount': 10,
                 'formatter': 'verbose'
             },
+            'console': {
+                'level': 'DEBUG',
+                'filters': ['require_debug_true'],
+                'class': 'logging.StreamHandler',
+            }
         },
         'loggers': {
             'django': {
@@ -132,6 +142,10 @@ if LOGS_ENABLED:
                 'level': 'WARNING',
                 'propagate': False,
             },
+            'django.db.backends': {
+                'level': 'DEBUG',
+                'handlers': ['console'],
+            }
         },
     }
 
