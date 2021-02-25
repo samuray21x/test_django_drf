@@ -22,7 +22,7 @@ class CompanyListCreateAPIView(generics.ListCreateAPIView):
 
 
 class CompanyRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = selectors.companies_all()
+    queryset = selectors.companies_all().prefetch_related('entities_objects', 'entities_objects__sub_objects')
     serializer_class = serializers.CompanySerializer
 
 
